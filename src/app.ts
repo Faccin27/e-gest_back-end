@@ -1,9 +1,12 @@
-import fastify from "fastify";
+import Fastify from 'fastify';
+import ClientRoutes from './routes/ClientRoutes';
 
-const buildApp = () => {
-  const app = fastify()
+const buildServer = () => {
+  const server = Fastify();
 
-  return app
-}
+  server.register(ClientRoutes, { prefix: '/clients' });
 
-export default buildApp
+  return server;
+};
+
+export default buildServer;

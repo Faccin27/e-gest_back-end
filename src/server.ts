@@ -1,10 +1,15 @@
-import buildApp from "./app";
+import buildServer from './app';
 
-const server = buildApp()
+const server = buildServer();
 
-server.listen({port: 3333, host: '0.0.0.0'})
-.then((address)=>{console.log(`Server is running: ${address}`)})
-.catch(err => {
-  console.log(`Error start server: ${err}`)
-  process.exit(1)
-})
+const start = async () => {
+  try {
+    await server.listen({ port: 3000 });
+    console.log('Servidor rodando na porta 3000');
+  } catch (err) {
+    server.log.error(err);
+    process.exit(1);
+  }
+};
+
+start();
