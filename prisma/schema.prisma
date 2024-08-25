@@ -1,32 +1,21 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model Clients {
-  id    Int      @id @default(autoincrement())
-  email String   @unique
-  name  String
-  pfp   String   @unique
-  cpf   String   @unique
-  birth DateTime
-
-  Address Address[]
+generator client {
+  provider = "prisma-client-js"
 }
 
-model Address {
-  id           Int    @id @default(autoincrement())
-  cep          Int
-  city         String
-  street       String
-  state        String
-  number       Int
-  neighborhood String
+enum Sexo {
+  Masculino
+  Feminino
+}
 
-  Clients   Clients? @relation(fields: [clientsId], references: [id])
-  clientsId Int?
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  sexo      Sexo     @default(Masculino)
+  createdAt DateTime @default(now())
 }
