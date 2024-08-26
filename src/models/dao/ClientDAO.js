@@ -1,10 +1,11 @@
-const prisma = require('../Client');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 class ClientDAO {
   async getAllClients() {
     return await prisma.clients.findMany({
       include: {
-        Address: true,
+        Address: true, // Inclui os endereços associados
       },
     });
   }
@@ -13,7 +14,7 @@ class ClientDAO {
     return await prisma.clients.findUnique({
       where: { id: parseInt(id) },
       include: {
-        Address: true,
+        Address: true, // Inclui os endereços associados
       },
     });
   }
