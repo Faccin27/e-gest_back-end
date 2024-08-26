@@ -20,7 +20,7 @@ model User {
   sexo      Sexo     @default(Masculino)
   pfp       String   @default("default.png")
   createdAt DateTime @default(now())
-}
+} 
 
 
 model Clients {
