@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export const sexoEnum = z.enum(["Masculino", "Feminino"])
 
+export const idSchema = z.number().int().positive("ID must be a positive integer")
+
 
 export const userSchema = z.object({
   id: z.number().optional(),
