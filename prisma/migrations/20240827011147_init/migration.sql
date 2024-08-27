@@ -1,6 +1,16 @@
--- AlterTable
-ALTER TABLE `user` ADD COLUMN `pass` VARCHAR(191) NOT NULL DEFAULT '123',
-    ADD COLUMN `pfp` VARCHAR(191) NOT NULL DEFAULT 'default.png';
+-- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `pass` VARCHAR(191) NOT NULL DEFAULT '123',
+    `sexo` ENUM('Masculino', 'Feminino') NOT NULL DEFAULT 'Masculino',
+    `pfp` VARCHAR(191) NOT NULL DEFAULT 'default.png',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    UNIQUE INDEX `User_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Clients` (
