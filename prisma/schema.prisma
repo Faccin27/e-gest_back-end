@@ -28,7 +28,7 @@ model Clients {
   name  String
   email String   @unique  
   sexo  Sexo     @default(Masculino)
-  pfp   String   @unique
+  pfp   String   
   cpf   String   @unique
   birth DateTime
 

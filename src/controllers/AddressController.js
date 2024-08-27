@@ -2,7 +2,7 @@ const AddressDAO = require('../models/dao/AddressDAO');
 const { addressSchema, idSchema } = require('../schemas/schemas');
 
 class AddressController {
-  async getAllAddresses( reply) {
+  async getAllAddresses(req, reply) {
     try {
       const Addresses = await AddressDAO.getAllAddresses();
       reply.send(Addresses);

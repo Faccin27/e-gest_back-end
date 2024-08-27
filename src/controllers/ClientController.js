@@ -34,11 +34,22 @@ class ClientController {
 
   async createClient(req, reply) {
     try {
-      const validetedClient = clientsSchema.parse(req.body);
+      const data = {
+        ...req.body,
+        birth: new Date(req.body.birth),
+      };
 
-      const newClient = await ClientDAO.createClient(validetedClient);
+      const validatedClient = clientsSchema.parse(data);
+
+      const existingClient = await ClientDAO.getClientByEmailorCpf(validatedClient.email, validatedClient.cpf);
+      if (existingClient) {
+        reply.status(400).send({ error: "Cliente com mesmo email ou cpf existente" })
+      }
+
+      const newClient = await ClientDAO.createClient(validatedClient);
       reply.status(201).send(newClient);
     } catch (err) {
+      console.log(err)
       if (err instanceof ZodError) {
         reply.status(400).send({ error: err.errors });
       } else {
@@ -49,13 +60,15 @@ class ClientController {
 
   async updateClient(req, reply) {
     try {
-      const validatedId = idSchema.parse(Number(req.params.id));
-      const validatedClient = clientsSchema.parse(req.body);
+      const data = {
+        ...req.body,
+        birth: new Date(req.body.birth),
+      };
 
-      const updatedClient = await ClientDAO.updateClient(
-        validatedId,
-        validatedClient
-      );
+      const validatedId = idSchema.parse(Number(req.params.id));
+      const validatedClient = clientsSchema.parse(data);
+
+      const updatedClient = await ClientDAO.updateClient(validatedId, validatedClient);
       if (updatedClient) {
         reply.send(updatedClient);
       } else {

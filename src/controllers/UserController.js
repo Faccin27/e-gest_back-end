@@ -3,9 +3,14 @@ const { ZodError } = require("zod");
 const { userSchema, idSchema } = require("../schemas/schemas");
 
 class UserController {
-  async getAllUsers(reply) {
-    const users = await UserDAO.getAllUsers();
-    reply.send(users);
+  async getAllUsers(req, reply) {
+    try {
+      const users = await UserDAO.getAllUsers();
+      reply.send(users);
+    } catch (error) {
+      console.error(error);
+      reply.status(500).send({ message: "Failed to retrieve users" });
+    }
   }
 
   async getUserById(req, reply) {
@@ -35,7 +40,10 @@ class UserController {
     } catch (err) {
       if (err instanceof ZodError) {
         reply.status(400).send({ error: err.errors });
+      } else if (err.message === 'Email already exists') {
+        reply.status(409).send({ error: 'Email already exists' });
       } else {
+        console.error(err);
         reply.status(500).send({ error: "Internal Server Error" });
       }
     }
@@ -46,8 +54,12 @@ class UserController {
       const validatedId = idSchema.parse(Number(req.params.id));
       const validatedData = userSchema.partial().parse(req.body);
 
-      const updateUser = await UserDAO.updateUser(validatedId, validatedData);
-      reply.send(updateUser);
+      const updatedUser = await UserDAO.updateUser(validatedId, validatedData);
+      if (updatedUser) {
+        reply.send(updatedUser);
+      } else {
+        reply.status(404).send({ message: "User not found" });
+      }
     } catch (err) {
       if (err instanceof ZodError) {
         reply.status(400).send({ error: err.errors });

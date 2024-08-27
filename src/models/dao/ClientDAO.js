@@ -5,7 +5,7 @@ class ClientDAO {
   async getAllClients() {
     return await prisma.clients.findMany({
       include: {
-        Address: true, // Inclui os endereços associados
+        Address: true,
       },
     });
   }
@@ -14,9 +14,21 @@ class ClientDAO {
     return await prisma.clients.findUnique({
       where: { id: parseInt(id) },
       include: {
-        Address: true, // Inclui os endereços associados
+        Address: true,
       },
     });
+  }
+
+  async getClientByEmailorCpf(email, cpf) {
+    return await
+      prisma.clients.findFirst({
+        where: {
+          OR: [
+            { email: email },
+            { cpf: cpf },
+          ],
+        }
+      })
   }
 
   async createClient(data) {
