@@ -1,7 +1,8 @@
 const AddressDAO = require('../models/dao/AddressDAO');
+const { addressSchema, idSchema } = require('../schemas/schemas');
 
 class AddressController {
-  async getAllAddresses(req, reply) {
+  async getAllAddresses( reply) {
     try {
       const Addresses = await AddressDAO.getAllAddresses();
       reply.send(Addresses);
@@ -13,49 +14,68 @@ class AddressController {
 
   async getAddressById(req, reply) {
     try {
-      const address = await AddressDAO.getAddressById(req.params.id);
+      const validatedId = idSchema.parse(Number(req.params.id))
+
+      const address = await AddressDAO.getAddressById(validatedId);
       if (address) {
         reply.send(address);
       } else {
         reply.status(404).send({ message: 'Address not found' });
       }
-    } catch (error) {
-      console.error(error);
-      reply.status(500).send({ message: 'Failed to retrieve address' });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        reply.status(400).send({ error: err.errors });
+      } else {
+        reply.status(500).send({ error: "Internal Server Error" });
+      }
     }
   }
 
   async createAddress(req, reply) {
     try {
-      const newAddress = await AddressDAO.createAddress(req.body);
+      const validatedAddress = addressSchema.parse(req.body)
+      const newAddress = await AddressDAO.createAddress(validatedAddress);
       reply.status(201).send(newAddress);
-    } catch (error) {
-      console.error(error);
-      reply.status(500).send({ message: 'Failed to create address' });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        reply.status(400).send({ error: err.errors });
+      } else {
+        reply.status(500).send({ error: "Internal Server Error" });
+      }
     }
   }
 
   async updateAddress(req, reply) {
     try {
-      const updatedAddress = await AddressDAO.updateAddress(req.params.id, req.body);
+      const validatedId = idSchema.parse(Number(req.params.id))
+      const validatedAddress = addressSchema.parse(req.body)
+
+      const updatedAddress = await AddressDAO.updateAddress(validatedId, validatedAddress);
       if (updatedAddress) {
         reply.send(updatedAddress);
       } else {
         reply.status(404).send({ message: 'Address not found' });
       }
-    } catch (error) {
-      console.error(error);
-      reply.status(500).send({ message: 'Failed to update address' });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        reply.status(400).send({ error: err.errors });
+      } else {
+        reply.status(500).send({ error: "Internal Server Error" });
+      }
     }
   }
 
   async deleteAddress(req, reply) {
     try {
-      await AddressDAO.deleteAddress(req.params.id);
+      const validatedId = idSchema.parse(Number(req.params.id))
+      await AddressDAO.deleteAddress(validatedId);
       reply.status(204).send();
-    } catch (error) {
-      console.error(error);
-      reply.status(500).send({ message: 'Failed to delete address' });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        reply.status(400).send({ error: err.errors });
+      } else {
+        reply.status(500).send({ error: "Internal Server Error" });
+      }
     }
   }
 }

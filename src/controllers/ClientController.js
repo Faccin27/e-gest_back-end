@@ -1,4 +1,6 @@
-const ClientDAO = require('../models/dao/ClientDAO');
+const { ZodError } = require("zod");
+const ClientDAO = require("../models/dao/ClientDAO");
+const { idSchema, clientsSchema } = require("../schemas/schemas");
 
 class ClientController {
   async getAllClients(req, reply) {
@@ -7,55 +9,78 @@ class ClientController {
       reply.send(clients);
     } catch (error) {
       console.error(error);
-      reply.status(500).send({ message: 'Failed to retrieve clients' });
+      reply.status(500).send({ message: "Failed to retrieve clients" });
     }
   }
 
   async getClientById(req, reply) {
     try {
-      const client = await ClientDAO.getClientById(req.params.id);
+      const validatedId = idSchema.parse(Number(req.params.id));
+
+      const client = await ClientDAO.getClientById(validatedId);
       if (client) {
         reply.send(client);
       } else {
-        reply.status(404).send({ message: 'Client not found' });
+        reply.status(404).send({ message: "Client not found" });
       }
-    } catch (error) {
-      console.error(error);
-      reply.status(500).send({ message: 'Failed to retrieve client' });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        reply.status(400).send({ error: err.errors });
+      } else {
+        reply.status(500).send({ error: "Internal Server Error" });
+      }
     }
   }
 
   async createClient(req, reply) {
     try {
-      const newClient = await ClientDAO.createClient(req.body);
+      const validetedClient = clientsSchema.parse(req.body);
+
+      const newClient = await ClientDAO.createClient(validetedClient);
       reply.status(201).send(newClient);
-    } catch (error) {
-      console.error(error);
-      reply.status(500).send({ message: 'Failed to create client' });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        reply.status(400).send({ error: err.errors });
+      } else {
+        reply.status(500).send({ error: "Internal Server Error" });
+      }
     }
   }
 
   async updateClient(req, reply) {
     try {
-      const updatedClient = await ClientDAO.updateClient(req.params.id, req.body);
+      const validatedId = idSchema.parse(Number(req.params.id));
+      const validatedClient = clientsSchema.parse(req.body);
+
+      const updatedClient = await ClientDAO.updateClient(
+        validatedId,
+        validatedClient
+      );
       if (updatedClient) {
         reply.send(updatedClient);
       } else {
-        reply.status(404).send({ message: 'Client not found' });
+        reply.status(404).send({ message: "Client not found" });
       }
-    } catch (error) {
-      console.error(error);
-      reply.status(500).send({ message: 'Failed to update client' });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        reply.status(400).send({ error: err.errors });
+      } else {
+        reply.status(500).send({ error: "Internal Server Error" });
+      }
     }
   }
 
   async deleteClient(req, reply) {
     try {
-      await ClientDAO.deleteClient(req.params.id);
+      const validatedId = idSchema.parse(Number(req.params.id));
+      await ClientDAO.deleteClient(validatedId);
       reply.status(204).send();
-    } catch (error) {
-      console.error(error);
-      reply.status(500).send({ message: 'Failed to delete client' });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        reply.status(400).send({ error: err.errors });
+      } else {
+        reply.status(500).send({ error: "Internal Server Error" });
+      }
     }
   }
 }
