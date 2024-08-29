@@ -1,5 +1,6 @@
 const AddressDAO = require('../models/dao/AddressDAO');
 const { addressSchema, idSchema } = require('../schemas/schemas');
+const { ZodError } = require('zod');  // Adicione esta linha
 
 class AddressController {
   async getAllAddresses(req, reply) {
@@ -33,6 +34,7 @@ class AddressController {
 
   async createAddress(req, reply) {
     try {
+      console.log(req.body)
       const validatedAddress = addressSchema.parse(req.body)
       const newAddress = await AddressDAO.createAddress(validatedAddress);
       reply.status(201).send(newAddress);
