@@ -1,7 +1,8 @@
 const fastify = require('fastify')({ logger: true });
 const cors = require('@fastify/cors');
-const jwt = require('@fastify/jwt');
 const router = require('./routes/router');
+const jwt = require('@fastify/jwt');
+const cookie = require('@fastify/cookie');
 
 // CORS
 fastify.register(cors, {
@@ -10,17 +11,28 @@ fastify.register(cors, {
 });
 
 // JWT
-fastify.register(require('@fastify/jwt'), {
-  secret: 'palavrasecreta'
-})
+fastify.register(cookie);
 
-fastify.decorate("authenticate", async function (request, reply) {
+// Configuração do JWT
+fastify.register(jwt, {
+  secret: process.env.JWT_SECRET || 'sua_chave_secreta_aqui',
+  cookie: {
+    cookieName: 'token',
+    signed: false
+  }
+});
+
+// Decorador de autenticação
+fastify.decorate("authenticate", async function(request, reply) {
   try {
     await request.jwtVerify();
   } catch (err) {
-    reply.send(err);
+    reply.status(401).send({ error: 'Unauthorized' });
   }
-})
+});
+
+
+
 
 // Registrar rotas
 fastify.register(router);
