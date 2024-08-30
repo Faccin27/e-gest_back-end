@@ -12,7 +12,9 @@ class UserDAO {
   async createUser(data) {
     return await prisma.create({ data });
   }
-
+  async getUserByEmail(email) {
+    return await prisma.findFirst({ where: { email: email } })
+  }
   async updateUser(id, data) {
     return await prisma.update({ where: { id: parseInt(id) }, data });
   }

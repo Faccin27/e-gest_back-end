@@ -42,7 +42,6 @@ class UserController {
       if (!user) {
         return reply.status(404).send({ message: 'User not found' });
       }
-
       // Verifica se a senha está correta
       const isPasswordValid = await bcrypt.compare(pass, user.pass);
       if (!isPasswordValid) {
@@ -50,7 +49,7 @@ class UserController {
       }
 
       // Gera o token JWT
-      const token = await reply.jwtSing({ id: user.id, email: user.email });
+      const token = await reply.jwtSign({ id: user.id, email: user.email });
 
       reply.send({ token });
     } catch (error) {
