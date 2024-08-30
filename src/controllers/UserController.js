@@ -2,7 +2,6 @@ const UserDAO = require("../models/dao/UserDAO");
 const { ZodError } = require("zod");
 const { userSchema, idSchema } = require("../schemas/schemas");
 const bcrypt = require('bcrypt');
-const fastify = require('fastify')();
 
 class UserController {
   async register(req, reply) {
@@ -51,7 +50,7 @@ class UserController {
       }
 
       // Gera o token JWT
-      const token = fastify.jwt.sign({ id: user.id, email: user.email });
+      const token = await reply.jwtSing({ id: user.id, email: user.email });
 
       reply.send({ token });
     } catch (error) {

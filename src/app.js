@@ -10,9 +10,9 @@ fastify.register(cors, {
 });
 
 // JWT
-fastify.register(jwt, {
-  secret: 'supersecret'
-});
+fastify.register(require('@fastify/jwt'), {
+  secret: 'palavrasecreta'
+})
 
 fastify.decorate("authenticate", async function (request, reply) {
   try {
