@@ -57,6 +57,13 @@ class UserController {
     }
   }
 
+  async getLoggedUser(req, reply) {
+    console.log("Chegou aqui")
+    console.log(req.user.id)
+    const usuarioLogado = await UserDAO.getUserById(req.user.id);
+    reply.send(usuarioLogado);
+  }
+
   async getAllUsers(req, reply) {
     try {
 

@@ -1,8 +1,6 @@
 async function authMiddleware(req, reply) {
   try {
-    console.log("entrou no try")
     const token = req.cookies.token;
-    console.log("seu token é: ", token)
 
     if (!token) {
       throw new Error('No token provided');
@@ -10,8 +8,14 @@ async function authMiddleware(req, reply) {
 
     const decoded = await req.jwtVerify();
 
+
+    if (!decoded || !decoded.id) {
+      throw new Error('Invalid token');
+    }
+
     req.user = decoded;
   } catch (err) {
+    console.error("Erro no authMiddleware:", err.message);
     reply.status(401).send({ error: 'Unauthorized access' });
   }
 }
