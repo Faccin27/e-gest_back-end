@@ -94,8 +94,7 @@ class UserController {
   }
 
   async createUser(req, reply) {
-    // Pode-se considerar não expor essa rota em uma aplicação real, 
-    // já que a criação de usuários seria feita pelo registro.
+
     try {
       const validatedData = userSchema.parse(req.body);
       const newUser = await UserDAO.createUser(validatedData);
@@ -114,9 +113,12 @@ class UserController {
 
   async updateUser(req, reply) {
     try {
-
       const validatedId = idSchema.parse(Number(req.params.id));
       const validatedData = userSchema.partial().parse(req.body);
+
+      if (validatedData.pass) {
+        validatedData.pass = await bcrypt.hash(validatedData.pass, 10);
+      }
 
       const updatedUser = await UserDAO.updateUser(validatedId, validatedData);
       if (updatedUser) {
@@ -132,6 +134,7 @@ class UserController {
       }
     }
   }
+
 
   async deleteUser(req, reply) {
     try {
