@@ -18,7 +18,7 @@ model User {
   email     String   @unique
   pass      String   @default("123")
   sexo      Sexo     @default(Masculino)
-  pfp       String   @default("default.png")
+  pfp       String   @default("1.png")
   createdAt DateTime @default(now())
 } 
 
