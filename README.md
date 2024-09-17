@@ -2,59 +2,64 @@
 
 <img src="./public/images/home.png" alt="Homepage" width="600"/>
 
-**e-Gest - Back-end** é a parte de servidor do sistema de gestão voltado para o gerenciamento eficiente de pessoas e endereços. Este repositório contém a API que gerencia a lógica de negócios, manipulação de dados e integração com o banco de dados MySQL.
+**e-Gest - Back-end** is the server-side of the management system aimed at efficiently handling people and addresses. This repository contains the API that manages business logic, data manipulation, and integration with the MySQL database.
 
-## Funcionalidades
+## Features
 
-- **Autenticação de Usuários**: Implementa endpoints para login e registro de usuários.
-- **Gestão de Usuários**: Endpoints para criar, atualizar, visualizar e excluir usuários.
-- **Busca de Usuários**: Funcionalidade para buscar usuários por CPF.
-- **Gerenciamento de Endereços**: Endpoints para criar, atualizar e visualizar endereços associados aos usuários.
+- **User Authentication**: Implements endpoints for user login and registration.
+- **User Management**: Endpoints to create, update, view, and delete users.
+- **User Search**: Functionality to search for users by CPF.
+- **Address Management**: Endpoints to create, update, and view addresses associated with users.
 
-## Tecnologias Utilizadas
+## Technologies Used
 
-- **Node.js**: Ambiente de execução para JavaScript no servidor.
-- **Fastify**: Framework para construção de APIs rápidas e eficientes.
-- **Prisma**: ORM para interagir com o banco de dados MySQL.
-- **MySQL**: Banco de dados relacional para armazenar dados do sistema.
+- **Node.js**: JavaScript runtime environment for the server.
+- **Fastify**: Framework for building fast and efficient APIs.
+- **Prisma**: ORM to interact with the MySQL database.
+- **MySQL**: Relational database to store system data.
 
-## Configuração do Projeto
+## Project Setup
 
-1. Clone este repositório:
+1. Clone this repository:
 
    ```bash
    git clone https://github.com/Faccin27/e-gest_back-end.git
+
    ```
 
-2. Navegue até o diretório do projeto:
+2. Navigate to the project directory:
+
 
    ```bash
    cd e-gest_back-end
    ```
 
-3. Instale as dependências:
+3. Install the dependencies:
 
    ```bash
    npm install
    ```
 
-4. Configure as variáveis de ambiente. Crie um arquivo `.env` na raiz do projeto e adicione as configurações necessárias, como o .env.examaple presente no projeto.
+4. Set up the environment variables. Create a .env file in the project root and add the required settings as shown in the .env.example provided in the project.
 
-5. Execute as migrações para configurar o banco de dados:
+5. Run the migrations to set up the database:
 
    ```bash
    npx prisma migrate deploy
    ```
 
-6. Inicie o servidor:
+6. Start the server:
+
    ```bash
    npm start
    ```
 
-## Contribuições
+## Contributions
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir um PR ou relatar issues.
+Contributions are welcome! Feel free to open a PR or report issues.
 
-## Repositório do Front-end
 
-Você pode acessar o repositório do front-end do projeto [aqui](https://github.com/Faccin27/e-gest_front-end).
+## Front-end Repository
+
+
+You can access the front-end repository of the project [here](https://github.com/Faccin27/e-gest_front-end).
